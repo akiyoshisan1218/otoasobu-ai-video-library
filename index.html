@@ -32,8 +32,34 @@
     .hero { padding: 30px 0 20px; display: grid; gap: 10px; }
     h1 { margin: 0; font-size: clamp(26px, 4vw, 42px); line-height: 1.16; }
     .lead { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.7; }
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .stat {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      color: #345;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .toolbar-panel {
+      margin-top: 8px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.84);
+      box-shadow: 0 12px 34px rgba(20, 45, 80, 0.08);
+    }
     .toolbar {
-      margin: 18px 0 14px;
+      margin: 0 0 12px;
       display: grid;
       grid-template-columns: 1.5fr repeat(3, minmax(130px, 1fr));
       gap: 10px;
@@ -81,6 +107,12 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--panel);
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #b9d2ef;
+      box-shadow: 0 14px 28px rgba(15, 35, 65, 0.09);
     }
     .thumb {
       display: block;
@@ -100,6 +132,7 @@
     }
     .title:hover { color: var(--accent); }
     .meta { display: flex; flex-wrap: wrap; gap: 6px; }
+    .date { color: var(--muted); font-size: 12px; line-height: 1.8; }
     .tag {
       display: inline-flex;
       max-width: 100%;
@@ -135,6 +168,21 @@
       text-decoration: none;
     }
     .hit strong { font-weight: 780; }
+    .actions { display: flex; justify-content: flex-end; }
+    .open {
+      display: inline-flex;
+      min-height: 32px;
+      align-items: center;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--accent);
+      background: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .open:hover { border-color: var(--accent); background: var(--accent-soft); }
     .empty {
       grid-column: 1 / -1;
       padding: 34px;
@@ -161,6 +209,12 @@
     <div class="wrap hero">
       <h1>オトアソブ生成AI 動画ライブラリ</h1>
       <p class="lead">AI系動画367本を検索できます。最新50本のうち48本は、動画内の文字起こし検索にも対応しています。</p>
+      <div class="stats" aria-label="公開データ概要">
+        <span class="stat">AI系 367本</span>
+        <span class="stat">文字起こし 48本</span>
+        <span class="stat">編集機能なし</span>
+      </div>
+      <div class="toolbar-panel">
       <div class="toolbar" role="search">
         <input id="q" type="search" placeholder="キーワードで検索">
         <select id="category" aria-label="カテゴリ">
@@ -260,6 +314,7 @@
       <div class="switches">
         <label><input id="includeTranscript" type="checkbox" checked> 最新50本の文字起こしも検索</label>
       </div>
+      </div>
     </div>
   </header>
   <main class="wrap">
@@ -342,6 +397,7 @@
             </a>
             <div class="body">
               <a class="title" href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(video.title)}</a>
+              ${video.published_at ? `<div class="date">${escapeHtml(video.published_at)}</div>` : ""}
               <div class="meta">
                 <span class="tag">${escapeHtml(video.category)}</span>
                 <span class="tag">${escapeHtml(video.tool)}</span>
@@ -350,6 +406,7 @@
               </div>
               ${hit ? `<a class="hit" href="${hitUrl}" target="_blank" rel="noopener noreferrer"><strong>[${escapeHtml(hit.time)}]</strong> ${escapeHtml(hit.text)}</a>` : ""}
               ${video.description ? `<p class="desc">${escapeHtml(video.description)}</p>` : ""}
+              <div class="actions"><a class="open" href="${url}" target="_blank" rel="noopener noreferrer">YouTubeで開く</a></div>
             </div>
           </article>
         `;
